@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>欢迎您来到Yukinoshita的云站点</title>
+  <style>
+    html {
+      background-image: url("https://i0.hdslb.com/bfs/article/ccd545ef2bdc275cf2247b7869e11850d1f3a7b8.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    body {
+      position: relative;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      color: white;
+      text-shadow: 2px 2px 4px #000000;
+      z-index: 1;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 10px;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: -1;
+    }
+  </style>
+  <script>
+    function adjustBackgroundSize() {
+      var html = document.querySelector("html");
+      html.style.backgroundSize = "cover";
+      html.style.backgroundPosition = "center center";
+    }
+
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function countdownRedirect() {
+      var seconds = getRandomInt(7, 14); // 从7到14之间的随机秒数
+      var countdownElement = document.getElementById("countdown");
+
+      var countdownInterval = setInterval(function() {
+        seconds--;
+        countdownElement.textContent = seconds;
+
+        if (seconds <= 0) {
+          clearInterval(countdownInterval);
+          window.location.href = "http://yukino.vladilena.cn";
+        }
+      }, 1000);
+    }
+
+    function displayInfo() {
+      var ipAddressElement = document.getElementById("ipAddress");
+      var ipLocationElement = document.getElementById("ipLocation");
+      var systemVersionElement = document.getElementById("systemVersion");
+
+      fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+          var ipAddress = data.ip;
+          var ipAddressText = "Your IP address is: " + ipAddress;
+          ipAddressElement.textContent = ipAddressText;
+
+          // Use an IP geolocation service to get location information
+          fetch('https://ipapi.co/' + ipAddress + '/json/')
+            .then(response => response.json())
+            .then(data => {
+              var ipLocation = data.city + ", " + data.region + ", " + data.country_name;
+              var ipLocationText = "Your IP location is: " + ipLocation;
+              ipLocationElement.textContent = ipLocationText;
+            });
+        });
+
+      var systemVersion = window.navigator.userAgent;
+      var systemVersionText = "Your system version is: " + systemVersion;
+      systemVersionElement.textContent = systemVersionText;
+    }
+
+    window.addEventListener("load", function() {
+      adjustBackgroundSize();
+      countdownRedirect();
+      displayInfo();
+    });
+
+    window.addEventListener("resize", adjustBackgroundSize);
+  </script>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <div class="content">
+    欢迎您来到Yukinoshita的云站点
+    <div class="subtitle">正在检测你的IP，网页将在<span id="countdown">5</span>秒后跳转</div>
+  </div>
+
+  <div class="footer">
+    <span id="ipAddress">Your IP address is: </span><br>
+    <span id="ipLocation">Your IP location is: </span><br>
+    <span id="systemVersion">Your system version is: </span>
+  </div>
+</body>
+</html>
